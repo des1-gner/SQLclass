@@ -1,0 +1,246 @@
+<pre>mysql&gt; /* Practical Test 1 */
+mysql&gt; /* Name: Oisin Sol Emlyn Aeonn */
+mysql&gt; /* ID: s3952320 */
+mysql&gt;
+mysql&gt; /* Q1 */
+mysql&gt; SELECT ADgroups.GroupID
+    -&gt; FROM ADgroups
+    -&gt; JOIN ADstudents ON ADgroups.GroupID = ADstudents.GroupID
+    -&gt; WHERE ADstudents.FirstName = &apos;Frodo&apos; AND ADstudents.LastName = &apos;Baggins&apos;;
++---------+
+| GroupID |
++---------+
+| J20     |
++---------+
+1 row in set (0.00 sec)
+
+mysql&gt;
+mysql&gt; /* Q2 */
+mysql&gt; SELECT ADteachers.TeacherID
+    -&gt; FROM ADteachers
+    -&gt; JOIN teachers_courses ON ADteachers.TeacherID = teachers_courses.TeacherID
+    -&gt; WHERE teachers_courses.CourseCode = &apos;ISYS2390&apos;;
++-----------+
+| TeacherID |
++-----------+
+| EMP10     |
+| EMP3      |
+| EMP5      |
+| EMP6      |
++-----------+
+4 rows in set (0.00 sec)
+
+mysql&gt;
+mysql&gt; /* Q3 */
+mysql&gt; SELECT *
+    -&gt; FROM ADstudents
+    -&gt; WHERE Email NOT LIKE &apos;%@%&apos;;
++-----------+-----------+----------+------------+----------------------------+------------+---------+
+| StudentID | FirstName | LastName | DOB        | Email                      | Phone      | GroupID |
++-----------+-----------+----------+------------+----------------------------+------------+---------+
+|  12345675 | Eragon    | Paolini  | 1998-08-14 | eragon.paolini.rmit.edu.au | 0422134987 | J20     |
++-----------+-----------+----------+------------+----------------------------+------------+---------+
+1 row in set (0.00 sec)
+
+mysql&gt;
+mysql&gt; /* Q4 */
+mysql&gt; SELECT FirstName, Email, Phone
+    -&gt; FROM ADstudents
+    -&gt; WHERE GroupID IS NOT NULL;
++-----------+----------------------------+------------+
+| FirstName | Email                      | Phone      |
++-----------+----------------------------+------------+
+| Mary      | mary.higgins@rmit.edu.au   | 0427777888 |
+| Dan       | dan.follett@rmit.edu.au    | 0424961276 |
+| Bilbo     | bilbo.baggins@rmit.edu.au  | 0421345678 |
+| Frodo     | frodo.baggins@rmit.edu.au  | 0422938475 |
+| Eragon    | eragon.paolini.rmit.edu.au | 0422134987 |
+| Sidney    | sidney.tolkien@rmit.edu.au | 0429999111 |
+| Ron       | ron.weasley@rmit.edu.au    | 0421111999 |
+| Ann       | ann.grisham@rmit.edu.au    | 0427898786 |
+| Aditi     | aditi.anand@rmit.edu.au    | 0428762376 |
+| Ahmad     | ahmad.jabbar@rmit.edu.au   | 0421111515 |
+| Chelsea   | chelsea.jin@rmit.edu.au    | 0421112123 |
+| Liang     | liang.guanqiao@rmit.edu.au | 0426132823 |
+| Harry     | harry.thanh@rmit.edu.au    | 0432131234 |
+| Mia       | mia.sheldon@rmit.edu.au    | 0432131234 |
++-----------+----------------------------+------------+
+14 rows in set (0.00 sec)
+
+mysql&gt;
+mysql&gt; /* Q5 */
+mysql&gt; SELECT AVG(NumericalGrade) AS AverageGrade
+    -&gt; FROM students_courses
+    -&gt; WHERE StudentID = 12345672;
++--------------+
+| AverageGrade |
++--------------+
+|      69.2500 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql&gt;
+mysql&gt; /* Q6 */
+mysql&gt; SELECT StudentID, CourseCode
+    -&gt; FROM students_courses
+    -&gt; WHERE NumericalGrade IS NULL;
++-----------+------------+
+| StudentID | CourseCode |
++-----------+------------+
+|  12345671 | COSC2385   |
+|  12345674 | COMM2326   |
+|  13875789 | COMM2326   |
++-----------+------------+
+3 rows in set (0.00 sec)
+
+mysql&gt;
+mysql&gt; /* Q7 */
+mysql&gt; SELECT CourseCode, Title
+    -&gt; FROM ADcourses
+    -&gt; WHERE CourseCode LIKE &apos;%COSC%&apos;;
++------------+----------------------+
+| CourseCode | Title                |
++------------+----------------------+
+| COSC2384   | Networking 2         |
+| COSC2385   | Networking 1         |
+| COSC2446   | Web Programming      |
+| COSC2510   | Intro to CS and PT   |
+| COSC2511   | Intro to Programming |
++------------+----------------------+
+5 rows in set (0.00 sec)
+
+mysql&gt;
+mysql&gt; /* Q8 */
+mysql&gt; SELECT CourseCode,
+    -&gt;        MIN(NumericalGrade) AS LowestGrade,
+    -&gt;        MAX(NumericalGrade) AS HighestGrade,
+    -&gt;        ROUND(AVG(NumericalGrade), 2) AS AverageGrade
+    -&gt; FROM students_courses
+    -&gt; GROUP BY CourseCode;
++------------+-------------+--------------+--------------+
+| CourseCode | LowestGrade | HighestGrade | AverageGrade |
++------------+-------------+--------------+--------------+
+| COMM2326   |          56 |           89 |        75.00 |
+| COSC2384   |          34 |           89 |        69.43 |
+| COSC2385   |          67 |           98 |        84.40 |
+| COSC2446   |          54 |           80 |        66.33 |
+| COSC2510   |          43 |           98 |        74.90 |
+| COSC2511   |          61 |           84 |        68.60 |
+| ISYS2390   |          56 |          100 |        73.50 |
+| ISYS3356   |          37 |           92 |        65.33 |
++------------+-------------+--------------+--------------+
+8 rows in set (0.00 sec)
+
+mysql&gt;
+mysql&gt; /* Q9 */
+mysql&gt; SELECT COUNT(*) AS StudentsCompleted
+    -&gt; FROM students_courses
+    -&gt; WHERE CourseCode = &apos;COSC2385&apos; AND NumericalGrade &gt;= 50;
++-------------------+
+| StudentsCompleted |
++-------------------+
+|                 5 |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql&gt;
+mysql&gt; /* Q10 */
+mysql&gt; SELECT StudentID,
+    -&gt;        ROUND(AVG(NumericalGrade)) AS AverageGrade
+    -&gt; FROM students_courses
+    -&gt; GROUP BY StudentID
+    -&gt; HAVING AVG(NumericalGrade) &gt;= 80;
++-----------+--------------+
+| StudentID | AverageGrade |
++-----------+--------------+
+|  12345673 |           83 |
+|  12345678 |           87 |
++-----------+--------------+
+2 rows in set (0.00 sec)
+
+mysql&gt;
+mysql&gt; /* Q11 */
+mysql&gt; SELECT TeacherID,
+    -&gt;        SUM(Hours) AS TeachingHours
+    -&gt; FROM teachers_courses
+    -&gt; GROUP BY TeacherID
+    -&gt; ORDER BY TeachingHours DESC, TeacherID ASC;
++-----------+---------------+
+| TeacherID | TeachingHours |
++-----------+---------------+
+| EMP5      |            20 |
+| EMP2      |            18 |
+| EMP7      |            18 |
+| EMP3      |            17 |
+| EMP6      |            17 |
+| EMP10     |            14 |
+| EMP4      |            10 |
+| EMP8      |            10 |
+| EMP11     |             8 |
+| EMP9      |             7 |
+| EMP1      |             6 |
++-----------+---------------+
+11 rows in set (0.00 sec)
+
+mysql&gt;
+mysql&gt; /* Q12 */
+mysql&gt; SELECT GroupID,
+    -&gt;        COUNT(*) AS NumberOfStudents
+    -&gt; FROM ADstudents
+    -&gt; GROUP BY GroupID
+    -&gt; HAVING COUNT(*) &gt; 3;
++---------+------------------+
+| GroupID | NumberOfStudents |
++---------+------------------+
+| F21     |                4 |
+| J20     |                4 |
++---------+------------------+
+2 rows in set (0.00 sec)
+
+mysql&gt;
+mysql&gt; /* Q13 */
+mysql&gt; SELECT COUNT(*) * 1000 AS &quot;Fees Paid - Student 12345673&quot;
+    -&gt; FROM students_courses
+    -&gt; WHERE StudentID = 12345673;
++------------------------------+
+| Fees Paid - Student 12345673 |
++------------------------------+
+|                         5000 |
++------------------------------+
+1 row in set (0.00 sec)
+
+mysql&gt;
+mysql&gt; /* Doing both for fun. */
+mysql&gt;
+mysql&gt; /* Q14 */
+mysql&gt; SELECT COUNT(DISTINCT TeacherID) AS &quot;Number of Teachers&quot;,
+    -&gt;        SUM(Hours) AS &quot;Number of Hours&quot;
+    -&gt; FROM teachers_courses
+    -&gt; WHERE CourseCode IN (&apos;COSC2511&apos;, &apos;COSC2446&apos;, &apos;COSC2384&apos;, &apos;ISYS2390&apos;);
++--------------------+-----------------+
+| Number of Teachers | Number of Hours |
++--------------------+-----------------+
+|                 10 |              94 |
++--------------------+-----------------+
+1 row in set (0.00 sec)
+
+mysql&gt;
+mysql&gt; /* Q15 */
+mysql&gt; SELECT c.CourseCode AS &quot;COURSECODE&quot;,
+    -&gt;        COUNT(s.NumericalGrade) AS &quot;Moderate Grades&quot;
+    -&gt; FROM students_courses s
+    -&gt; JOIN ADcourses c
+    -&gt; ON s.CourseCode = c.CourseCode
+    -&gt; WHERE (c.CourseCode LIKE &apos;ISYS%&apos; OR c.CourseCode LIKE &apos;COMM%&apos;)
+    -&gt;   AND (s.NumericalGrade BETWEEN 50 AND 69)
+    -&gt; GROUP BY c.CourseCode
+    -&gt; HAVING COUNT(s.NumericalGrade) &gt; 1
+    -&gt; ORDER BY COUNT(s.NumericalGrade) ASC;
++------------+-----------------+
+| COURSECODE | Moderate Grades |
++------------+-----------------+
+| COMM2326   |               2 |
+| ISYS2390   |               6 |
++------------+-----------------+
+2 rows in set (0.00 sec)
+</pre>
